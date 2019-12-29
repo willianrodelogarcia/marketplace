@@ -434,8 +434,8 @@ function App() {
       </Carousel>
       <div className="select-content ">
         <div className="select-content-text">
-          {/*<h2>{filter.filter}</h2>
-          <p>({filter.count} Products)</p>*/}
+          <h2>{filter.filter}</h2>
+          <p>({filter.count} Products)</p>
         </div>
         <div className="input-group mb-3 col-sm-3">
           <select
