@@ -13,7 +13,9 @@ import {
   Image,
   Modal,
   Spinner,
-  Alert
+  Alert,
+  ProgressBar,
+  Carousel
 } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -60,7 +62,15 @@ function App() {
   const [show, setShow] = useState(false);
   const [showCart, setShowCart] = useState(false);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setForm({
+      nameProduct: "",
+      price: "",
+      description: "",
+      category: ""
+    });
+  };
   const handleShow = () => setShow(true);
   const handleCartClose = () => {
     setShowCart(false);
@@ -181,7 +191,7 @@ function App() {
         });
 
         console.log(result);
-        countProduct(result);
+        countProduct(result, filter);
       } catch (err) {
         console.log(err);
       }
@@ -204,7 +214,7 @@ function App() {
         });
 
         console.log(result);
-        countProduct(result);
+        countProduct(result, "All Products");
       } catch (err) {
         //alert("Error en la api");
         console.log(err);
@@ -232,14 +242,16 @@ function App() {
     }
 
     try {
-      const result = await axios.get("https://marketplace-api.herokuapp.com/api/products");
+      const result = await axios.get(
+        "https://marketplace-api.herokuapp.com/api/products"
+      );
 
       setData({
         products: result.data.products
       });
 
       console.log(result);
-      countProduct(result);
+      countProduct(result, "All Products");
     } catch (err) {
       //alert("Error en la api");
       console.log(err);
@@ -308,14 +320,17 @@ function App() {
     }
   }
 
-  const countProduct = r => {
+  const countProduct = (r, category) => {
     console.log("Index", "test");
     console.log("Products", r.data.products);
+
+    console.log(filter.filter);
+
     if (r.data.products.length > 0) {
       r.data.products.map((data, index) => {
         setFilter({
           count: index + 1,
-          filter: "All Products"
+          filter: category
         });
         console.log("Index", filter.count);
       });
@@ -345,7 +360,7 @@ function App() {
   return (
     <div>
       <Navbar bg="light" variant="light">
-        <Navbar.Brand>
+        <Navbar.Brand className="logo-nav">
           <img
             alt=""
             src="../img/store.png"
@@ -353,7 +368,7 @@ function App() {
             height="50"
             className="d-inline-block align-top"
           />{" "}
-          MarketPlace
+          <h3>MarketPlace</h3>
         </Navbar.Brand>
         <Nav className="mr-auto"></Nav>
         <Form inline>
@@ -377,10 +392,50 @@ function App() {
         </Form>
       </Navbar>
 
+      {/*<Image
+        width={100 + "%"}
+        height={50+'%'}
+        src="https://c4.wallpaperflare.com/wallpaper/255/407/688/pokemon-pokemon-ruby-and-sapphire-wallpaper-preview.jpg"
+        fluid
+      />*/}
+      <Carousel>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src="https://http2.mlstatic.com/optimize/o:f_webp/resources/deals/exhibitors_resources/mco-home-desktop-slider-picture-41391824-9603-440e-a18e-65b3cceabb4c.jpg"
+            alt="First slide"
+          />
+          <Carousel.Caption>
+            
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src="https://merchant.razer.com/v3/wp-content/uploads/2015/03/manage-marketplace-banner.jpg"
+            alt="Third slide"
+          />
+
+          <Carousel.Caption>
+            
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            className="d-block w-100"
+            src="https://www.indusnet.co.in/images/mo_developmentTabBanner.png"
+            alt="Third slide"
+          />
+
+          <Carousel.Caption>
+            
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
       <div className="select-content ">
         <div className="select-content-text">
-          <h2>{filter.filter}</h2>
-          <p>({filter.count} Products)</p>
+          {/*<h2>{filter.filter}</h2>
+          <p>({filter.count} Products)</p>*/}
         </div>
         <div className="input-group mb-3 col-sm-3">
           <select
@@ -400,13 +455,6 @@ function App() {
           </select>
         </div>
       </div>
-
-      {/*<Image
-        width={100 + "%"}
-        height={50+'%'}
-        src="https://c4.wallpaperflare.com/wallpaper/255/407/688/pokemon-pokemon-ruby-and-sapphire-wallpaper-preview.jpg"
-        fluid
-      />*/}
 
       <div className="content">
         <Row>
@@ -467,6 +515,7 @@ function App() {
                       onChange={changeFile}
                       aria-describedby="imgFile"
                     />
+
                     <label className="custom-file-label" htmlFor="imgFile">
                       {textImage.name}
                     </label>
@@ -474,6 +523,7 @@ function App() {
                 </div>
               </div>
             </div>
+            <ProgressBar now="60" label="60" />
             <div className="form-row">
               <div className="col-md-4 mb-3">
                 <label htmlFor="nameProduct">Name Product</label>
@@ -482,6 +532,7 @@ function App() {
                   className="form-control"
                   id="nameProduct"
                   name="nameProduct"
+                  value={form.nameProduct}
                   onChange={getValueForm}
                   required
                 />
@@ -493,6 +544,7 @@ function App() {
                   className="form-control"
                   id="price"
                   name="price"
+                  value={form.price}
                   onChange={getValueForm}
                   required
                 />
@@ -503,6 +555,7 @@ function App() {
                   className="custom-select"
                   id="category"
                   name="category"
+                  value={form.category}
                   onChange={getValueForm}
                   required
                 >
@@ -524,6 +577,7 @@ function App() {
                   className="form-control"
                   id="description"
                   name="description"
+                  value={form.description}
                   onChange={getValueForm}
                   rows="3"
                   required

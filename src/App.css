@@ -8,7 +8,16 @@
 
 .card{
   margin: 10px 0px 10px 0px;
+  cursor: pointer;
+  
+  transition: box-shadow .3s;
 }
+
+.card:hover {
+  box-shadow: 0 0 11px rgba(33,33,33,.2); 
+}
+
+
 .select-content{
   margin: 70px 70px 70px 70px;
   display: flex;
@@ -24,7 +33,17 @@
 
 
 .navbar{
-  background-color: rgb(225, 222, 222) !important;
+  background-color: rgb(22, 22, 22) !important;
+}
+
+.carousel img{
+  height: 50vh;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  object-fit: inherit;
+  background-position: center center;
+  min-height: 400px;
 }
 
 .card-img{
@@ -128,4 +147,14 @@ hr {
   border-top: 1px solid #ccc;
   margin: 1em 0;
   padding: 0;
+}
+
+.logo-nav{
+  display: flex;
+  align-items: center;
+}
+
+.logo-nav h3 {
+  text-decoration-color: white;
+  color: white
 }
