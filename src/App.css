@@ -1,38 +1,131 @@
 .App {
-  text-align: center;
+  margin: 10px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.content{
+  margin: 70px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.card{
+  margin: 10px 0px 10px 0px;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.select-content{
+  margin: 70px 70px 70px 70px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.App-link {
-  color: #61dafb;
+.select-content-text{
+  display: flex;
+  align-items: baseline;
+  
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+.navbar{
+  background-color: rgb(225, 222, 222) !important;
+}
+
+.card-img{
+  
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  
+}
+
+.xyz { 
+  background-size: auto; 
+  text-align: left; 
+  position: fixed !important;
+  bottom: 0;
+  right: 0;
+  margin: 15px;
+  
+  
+} 
+.btn-circle.btn-sm { 
+  width: 30px; 
+  height: 30px; 
+  padding: 6px 0px; 
+  border-radius: 15px; 
+  font-size: 8px; 
+  text-align: center; 
+} 
+.btn-circle.btn-md { 
+  width: 50px; 
+  height: 50px; 
+  padding: 7px 10px; 
+  border-radius: 25px; 
+  font-size: 10px; 
+  text-align: center; 
+} 
+.btn-circle.btn-xl { 
+  width: 70px; 
+  height: 70px; 
+  padding: 10px 16px; 
+  border-radius: 35px; 
+  font-size: 12px; 
+  text-align: center; 
+  
+} 
+
+.shopping-cart{
+  display: flex;
+}
+
+.shopping-cart-info{
+  
+  width: 100%;
+  
+}
+
+.shopping-cart-image img{
+  width: 80px;
+  height: 80px;
+  margin: 0px 10px 0px 0px;
+}
+
+.shopping-cart-content{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  
+}
+
+.shopping-cart-body{
+  max-width: 200px;
+  padding:0;
+  margin:0;
+}
+.shopping-cart-body p {
+  margin: 0;
+}
+
+.shopping-cart-body h3 {
+  margin: 0;
+}
+
+.subtitle-cart{
+  opacity: 0.5;
+  font-size: 12px;
+}
+
+.shopping-cart-price{
+  
+  align-self: center;
+}
+
+.shopping-cart-buttons{
+  align-self: center;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
 }
