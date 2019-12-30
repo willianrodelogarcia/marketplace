@@ -158,3 +158,46 @@ hr {
   text-decoration-color: white;
   color: white
 }
+
+.content-detail{
+  display: flex;
+  
+}
+.content-info{
+  margin: 10px;
+  display: flex;
+  width: 50%;
+  word-break: break-all;
+  height: 50%;
+  flex-direction: column;
+  
+  
+}
+.content-image img{
+  width: 200px;
+  height: 200px;
+  text-align: center;
+  object-fit: contain;
+}
+
+.content-image{
+  border: 1px solid gray;
+}
+
+.content-detail h3{
+  margin: 0px;
+}
+.content-detail p{
+  margin: 0px;
+  max-height: 50%;
+  font-size: 1rem;
+}
+
+.content-footer{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  
+  margin: 15px;
+  
+}

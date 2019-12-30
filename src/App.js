@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+//We import the axios library to make requests to our api
 import axios from "axios";
+//We import the react-boostrap library for the design
 import {
   Button,
   Navbar,
@@ -10,14 +12,12 @@ import {
   Col,
   Card,
   Badge,
-  Image,
   Modal,
-  Spinner,
   Alert,
   ProgressBar,
   Carousel
 } from "react-bootstrap";
-
+//react-boostrap styles
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import "./App.css";
@@ -26,52 +26,78 @@ function App() {
   const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/willdev/image/upload";
   const CLOUDINARY_UPLOAD_PRESET = "nllrspdu";
 
+  //we define the state to save the products that come from the api
   const [data, setData] = useState({
     products: []
   });
-
+  //the state with which the products are stored in the cart is defined
   const [shoppingcart, setShoppingCart] = useState({
     shoppingcarts: [],
     count: 0
   });
 
+  //the state where the name, file and image progress is saved is defined
   const [textImage, setNameImage] = useState({
     name: "Select Image",
     file: [],
     progress: 0
   });
-
+  //the state where we have the name of the product, price, description and category is defined
   const [form, setForm] = useState({
     nameProduct: "",
     price: "",
     description: "",
     category: ""
   });
-
+  //the state where we have the quantity of products is defined
   const [filter, setFilter] = useState({
     filter: "All Products",
     count: 0
   });
 
+  //status to show an alert when saving a product
   const [alert, setAlert] = useState({
     show: false,
     status: "",
     message: ""
   });
 
+  //status to show product details
+  const [detail, setDetail] = useState({
+    _id: "",
+    urlPhotoProduct: "",
+    nameProduct: "",
+    price: "",
+    description: "",
+    category: ""
+  });
+  //state to control the action of a modal to open and close it
   const [show, setShow] = useState(false);
+  //state to control the action of a modal to open and close it
   const [showCart, setShowCart] = useState(false);
+  //state to control the action of a modal to open and close it
+  const [showDetailProduct, setshowDetailProduct] = useState(false);
 
+  //function to close modal and clean form data
   const handleClose = () => {
     setShow(false);
+    //clean the form
     setForm({
       nameProduct: "",
       price: "",
       description: "",
       category: ""
     });
+    //close the alert
+    setAlert({
+      show: false,
+      status: "",
+      message: ""
+    });
   };
+  //close modal
   const handleShow = () => setShow(true);
+  //close cart modal
   const handleCartClose = () => {
     setShowCart(false);
     setAlert({
@@ -81,41 +107,63 @@ function App() {
     });
   };
 
+  //function to show modal with product detail
+  const openDetail = (data, e) => {
+    e.preventDefault();
+    setshowDetailProduct(true);
+
+    setDetail({
+      _id: data._id,
+      urlPhotoProduct: data.urlPhotoProduct,
+      nameProduct: data.nameProduct,
+      price: data.price,
+      description: data.description,
+      category: data.category
+    });
+  };
+
+  //function to close modal with product detail
+  const handleDetailProductClose = () => {
+    setshowDetailProduct(false);
+  };
+
   const [save, setSave] = useState({
     products: []
   });
 
+  //status to save the sum of the products in the cart
   const [sum, setSum] = useState({
     sum: 0,
     count: 0
   });
 
+  //function to show cart modal
   const handleCartShow = () => {
     setShowCart(true);
     var sum = 0;
     var count = 0;
+    //product data is obtained from storage
     var data = JSON.parse(localStorage.getItem("test"));
-    console.log(data);
+    
     if (data !== null) {
       data.map((data, index) => {
         sum += data.price;
         count = index + 1;
       });
 
-      console.log(JSON.parse(localStorage.getItem("test")));
-      //console.log(JSON.stringify(data))
-
+      //the status of the sum and quantity of products is saved
       setSum({
         sum: sum,
         count: count
       });
-
+      //the status of the products is saved in the shopping cart in the localStorage
       setShoppingCart({
         shoppingcarts: JSON.parse(localStorage.getItem("test"))
       });
     }
   };
 
+  //function to count the amount of products in the cart
   function countCart() {
     var data = JSON.parse(localStorage.getItem("test"));
     var sum = 0;
@@ -133,13 +181,17 @@ function App() {
     }
   }
 
+  //function to add the products to the cart
   function addCart(data, e) {
     let products = [];
-    console.log(data);
+    //console.log(data);
+
+    //we validate that there are products in the localStorage
     if (localStorage.getItem("test")) {
+      //Products are saved
       products = JSON.parse(localStorage.getItem("test"));
     }
-
+    //a new product is added to the localStorage
     products.push({
       id: data._id,
       urlPhotoProduct: data.urlPhotoProduct,
@@ -149,17 +201,19 @@ function App() {
       category: data.category
     });
 
-    console.log("productos", products);
+    //console.log("productos", products);
 
+    //it is saved in localStorage
     localStorage.setItem("test", JSON.stringify(products));
     countCart();
   }
 
+  //function to get the form data
   const getValueForm = e => {
     const name = e.target.name;
     const value = e.target.value;
 
-    console.log(name, value);
+    //console.log(name, value);
 
     setForm({
       ...form,
@@ -167,6 +221,7 @@ function App() {
     });
   };
 
+  //function to get image data
   function changeFile(e) {
     e.preventDefault();
 
@@ -177,20 +232,23 @@ function App() {
     });
   }
 
+  //function to filter by category
   async function selectCategory(e) {
     e.preventDefault();
+    //we get the value of the product category
     let filter = e.target.value;
     if (filter !== "0") {
       try {
+        //We made a GET request to obtain the products by category
         const result = await axios.get(
           `https://marketplace-api.herokuapp.com/api/filter/${filter}`
         );
-
+        
         setData({
           products: result.data.products
         });
 
-        console.log(result);
+        
         countProduct(result, filter);
       } catch (err) {
         console.log(err);
@@ -200,29 +258,34 @@ function App() {
     }
   }
 
+  //function to search for a product by name
   const getProductsSearch = async e => {
     if (e.target.value === "") {
+      //we get the products
       getProducts();
     } else {
       try {
+        //We make a GET request to obtain the products
         const result = await axios.get(
           `https://marketplace-api.herokuapp.com/api/search/${e.target.value}`
         );
-
+        //we change the state of the product
         setData({
           products: result.data.products
         });
 
-        console.log(result);
+        
         countProduct(result, "All Products");
       } catch (err) {
-        //alert("Error en la api");
+        
         console.log(err);
       }
     }
   };
 
+  //function to obtain product data
   const getProducts = async () => {
+    //we get the data stored in the localStorage
     var data = JSON.parse(localStorage.getItem("test"));
     var sum = 0;
     if (data !== null) {
@@ -231,10 +294,7 @@ function App() {
         sum += data.price;
         count = index + 1;
       });
-
-      console.log(JSON.parse(localStorage.getItem("test")));
-      //console.log(JSON.stringify(data))
-
+      //We change the state with the sum and quantity of products
       setSum({
         sum: sum,
         count: count
@@ -250,16 +310,18 @@ function App() {
         products: result.data.products
       });
 
-      console.log(result);
+      
       countProduct(result, "All Products");
     } catch (err) {
-      //alert("Error en la api");
+      
       console.log(err);
     }
   };
 
+  //function to save the products in the database
   async function saveProduct(e) {
     e.preventDefault();
+    //we get the image data
     const file = textImage.file;
 
     const formData = new FormData();
@@ -267,24 +329,27 @@ function App() {
     formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
     try {
+      //we made a POST request to cloudinary to save the image
       const result = await axios.post(CLOUDINARY_URL, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         },
         onUploadProgress(e) {
-          console.log(Math.round((e.loaded * 100) / e.total));
+          //we calculate the image loading progress
           const progress = (e.loaded * 100) / e.total;
+          //we save the state and progress of the image
           setNameImage({
             name: textImage.name,
             progress
           });
           if (progress === 100) {
+            //we reset the values
             setNameImage({ name: "Select Image", file: [], progress: 0 });
           }
         }
       });
 
-      console.log(result);
+      //we create the json object with the product data to save it in the database
       const dataJson = {
         urlPhotoProduct: result.data.url,
         nameProduct: form.nameProduct,
@@ -292,6 +357,7 @@ function App() {
         description: form.description,
         category: form.category
       };
+      //We carry out the POST request to send the product data
       const saveMongo = await axios.post(
         "https://marketplace-api.herokuapp.com/api/products",
         dataJson,
@@ -301,38 +367,36 @@ function App() {
           }
         }
       );
-      console.log(saveMongo);
-
+      //we change the alert status
       setAlert({
         show: true,
         status: saveMongo.data.status,
         message: saveMongo.data.message
       });
+      //we change the state of the form to clear the fields
       setForm({
         nameProduct: "",
         price: "",
         category: "",
         description: ""
       });
+      //we get the products to update the view
       getProducts();
     } catch (err) {
       console.log(err);
     }
   }
 
+  //function to count the quantity of products registered in the base
   const countProduct = (r, category) => {
-    console.log("Index", "test");
-    console.log("Products", r.data.products);
-
-    console.log(filter.filter);
-
+    //validate if there are products
     if (r.data.products.length > 0) {
       r.data.products.map((data, index) => {
         setFilter({
           count: index + 1,
           filter: category
         });
-        console.log("Index", filter.count);
+        
       });
     } else {
       setFilter({
@@ -342,23 +406,31 @@ function App() {
     }
   };
 
+  //function to remove the product from the cart
   function removeProduct(productId) {
-    // Your logic for your app.
     // strore products in local storage
     let storageProducts = JSON.parse(localStorage.getItem("test"));
+    //all the different id are searched in storage to only save those that will not be deleted
     let products = storageProducts.filter(product => product.id !== productId);
-    console.log(products);
+    
+    //all products are stored in the localStorage
     localStorage.setItem("test", JSON.stringify(products));
+
+    //cart products are counted
     countCart();
+
+    //the modal closes
     setShowCart(false);
   }
 
+  //function to execute a function when starting the application
   useEffect(() => {
     getProducts();
   }, []);
 
   return (
     <div>
+      {/** NavBar start */}
       <Navbar bg="light" variant="light">
         <Navbar.Brand className="logo-nav">
           <img
@@ -391,13 +463,9 @@ function App() {
           </Button>
         </Form>
       </Navbar>
+      {/** end of NavBar */}
 
-      {/*<Image
-        width={100 + "%"}
-        height={50+'%'}
-        src="https://c4.wallpaperflare.com/wallpaper/255/407/688/pokemon-pokemon-ruby-and-sapphire-wallpaper-preview.jpg"
-        fluid
-      />*/}
+      {/** Banner start */}
       <Carousel>
         <Carousel.Item>
           <img
@@ -405,9 +473,7 @@ function App() {
             src="https://http2.mlstatic.com/optimize/o:f_webp/resources/deals/exhibitors_resources/mco-home-desktop-slider-picture-41391824-9603-440e-a18e-65b3cceabb4c.jpg"
             alt="First slide"
           />
-          <Carousel.Caption>
-            
-          </Carousel.Caption>
+          <Carousel.Caption></Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
           <img
@@ -416,9 +482,7 @@ function App() {
             alt="Third slide"
           />
 
-          <Carousel.Caption>
-            
-          </Carousel.Caption>
+          <Carousel.Caption></Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
           <img
@@ -427,15 +491,19 @@ function App() {
             alt="Third slide"
           />
 
-          <Carousel.Caption>
-            
-          </Carousel.Caption>
+          <Carousel.Caption></Carousel.Caption>
         </Carousel.Item>
       </Carousel>
+      {/** Banner end */}
+
+      {/** Filter start */}
       <div className="select-content ">
         <div className="select-content-text">
           <h2>{filter.filter}</h2>
-          <p>({filter.count} Products)</p>
+          <p>
+            <span>(</span>
+            {filter.count} Product(s)<span>)</span>
+          </p>
         </div>
         <div className="input-group mb-3 col-sm-3">
           <select
@@ -445,17 +513,19 @@ function App() {
           >
             <option value="0">Choose...</option>
             <option value="Technology">Technology</option>
-            <option value="homeappliances">home appliances</option>
-            <option value="home">Home</option>
+            <option value="Home Appliances">Home Appliances</option>
+            <option value="Home">Home</option>
             <option value="Clothing">Clothing</option>
-            <option value="HealthBeauty">Health Beauty</option>
+            <option value="Health Beauty">Health Beauty</option>
             <option value="Beauty">Beauty</option>
-            <option value="ToyStore">Toy Store</option>
+            <option value="Toy Store">Toy Store</option>
             <option value="Sports">Sports</option>
           </select>
         </div>
       </div>
+      {/** Filter end */}
 
+      {/** Start of the Card with the product */}
       <div className="content">
         <Row>
           {data.products.map((data, index) => {
@@ -463,19 +533,23 @@ function App() {
               <Col lg={4} md={4} sm={6} xl={3} xs={12} key={index}>
                 <Card>
                   <Card.Img
+                    onClick={e => openDetail(data, e)}
                     className="card-img"
                     variant="top"
                     src={data.urlPhotoProduct}
                   />
+
                   <Card.Body>
-                    <Card.Title>{data.nameProduct}</Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">
-                      Price:{data.price}
-                    </Card.Subtitle>
-                    <Card.Subtitle className="mb-2 text-muted">
-                      Category:{data.category}
-                    </Card.Subtitle>
-                    <Card.Text></Card.Text>
+                    <div onClick={e => openDetail(data, e)}>
+                      <Card.Title>{data.nameProduct}</Card.Title>
+                      <Card.Subtitle className="mb-2 text-muted">
+                        Price:{data.price}
+                      </Card.Subtitle>
+                      <Card.Subtitle className="mb-2 text-muted">
+                        Category:{data.category}
+                      </Card.Subtitle>
+                      <Card.Text></Card.Text>
+                    </div>
                     <Button
                       variant="outline-dark"
                       onClick={e => addCart(data, e)}
@@ -496,10 +570,12 @@ function App() {
           })}
         </Row>
       </div>
+      {/** end of the Card with the product */}
 
+      {/** Modal start to register the product */}
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Registro Producto</Modal.Title>
+          <Modal.Title>Product Registration</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form onSubmit={e => saveProduct(e)}>
@@ -523,7 +599,7 @@ function App() {
                 </div>
               </div>
             </div>
-            <ProgressBar now="60" label="60" />
+            <ProgressBar now={textImage.progress} />
             <div className="form-row">
               <div className="col-md-4 mb-3">
                 <label htmlFor="nameProduct">Name Product</label>
@@ -561,12 +637,12 @@ function App() {
                 >
                   <option value="0">Choose...</option>
                   <option value="Technology">Technology</option>
-                  <option value="homeappliances">home appliances</option>
-                  <option value="home">Home</option>
+                  <option value="Home Appliances">Home Appliances</option>
+                  <option value="Home">Home</option>
                   <option value="Clothing">Clothing</option>
-                  <option value="HealthBeauty">Health Beauty</option>
+                  <option value="Health Beauty">Health Beauty</option>
                   <option value="Beauty">Beauty</option>
-                  <option value="ToyStore">Toy Store</option>
+                  <option value="Toy Store">Toy Store</option>
                   <option value="Sports">Sports</option>
                 </select>
               </div>
@@ -599,7 +675,9 @@ function App() {
           </form>
         </Modal.Body>
       </Modal>
+      {/** End of the Modal to register the product */}
 
+      {/** start of the modal to show the shopping cart */}
       <Modal show={showCart} onHide={handleCartClose}>
         <Modal.Header closeButton>
           <Modal.Title>Shopping Cart</Modal.Title>
@@ -645,7 +723,48 @@ function App() {
           <p>Total: $ {sum.sum}</p>
         </Modal.Footer>
       </Modal>
+      {/** end of the modal to show the shopping cart */}
 
+      {/** start of modal to show product detail */}
+      <Modal
+        centered
+        show={showDetailProduct}
+        onHide={handleDetailProductClose}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Detail Product</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="content-detail">
+            <div className="content-image">
+              <img src={detail.urlPhotoProduct} />
+            </div>
+            <div className="content-info">
+              <h3>{detail.nameProduct}</h3>
+              <p>Price: ${detail.price}</p>
+              <p>{detail.description}</p>
+              <div className="content-footer">
+                <Button
+                  variant="outline-dark"
+                  onClick={e => addCart(detail, e)}
+                >
+                  <img
+                    width={20}
+                    height={20}
+                    className="mr-3"
+                    src="../img/shopping-cart.png"
+                    alt="Generic placeholder"
+                  />
+                  Add
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+      {/** end of modal to show product detail */}
+      
+      {/** Start button to add a new product */}
       <div className="xyz">
         <button
           onClick={handleShow}
@@ -655,6 +774,7 @@ function App() {
           <i className="material-icons">add</i>
         </button>
       </div>
+      {/** end of the button to add a new product */}
     </div>
   );
 }
