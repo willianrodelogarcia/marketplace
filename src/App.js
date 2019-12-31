@@ -83,6 +83,8 @@ function App() {
     count: 0
   });
 
+  const [showBanner,setShowBanner] = useState(true)
+
   //function to close modal and clean form data
   const handleClose = () => {
     setShow(false);
@@ -257,6 +259,7 @@ function App() {
     if (e.target.value === "") {
       //we get the products
       getProducts();
+      setShowBanner(true)
     } else {
       try {
         //We make a GET request to obtain the products
@@ -267,7 +270,7 @@ function App() {
         setData({
           products: result.data.products
         });
-
+        setShowBanner(false)
         countProduct(result, "All Products");
       } catch (err) {
         console.log(err);
@@ -455,7 +458,8 @@ function App() {
       {/** end of NavBar */}
 
       {/** Banner start */}
-      <Carousel>
+      {
+        showBanner ? <Carousel >
         <Carousel.Item>
           <img
             className="d-block w-100"
@@ -482,7 +486,9 @@ function App() {
 
           <Carousel.Caption></Carousel.Caption>
         </Carousel.Item>
-      </Carousel>
+      </Carousel>: null
+      }
+      
       {/** Banner end */}
 
       {/** Filter start */}
