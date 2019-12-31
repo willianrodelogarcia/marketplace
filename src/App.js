@@ -83,7 +83,7 @@ function App() {
     count: 0
   });
 
-  const [showBanner,setShowBanner] = useState(true)
+  const [showBanner, setShowBanner] = useState(true);
 
   //function to close modal and clean form data
   const handleClose = () => {
@@ -259,7 +259,7 @@ function App() {
     if (e.target.value === "") {
       //we get the products
       getProducts();
-      setShowBanner(true)
+      setShowBanner(true);
     } else {
       try {
         //We make a GET request to obtain the products
@@ -270,7 +270,7 @@ function App() {
         setData({
           products: result.data.products
         });
-        setShowBanner(false)
+        setShowBanner(false);
         countProduct(result, "All Products");
       } catch (err) {
         console.log(err);
@@ -458,37 +458,37 @@ function App() {
       {/** end of NavBar */}
 
       {/** Banner start */}
-      {
-        showBanner ? <Carousel >
-        <Carousel.Item>
-          <img
-            className="d-block w-100"
-            src="https://http2.mlstatic.com/optimize/o:f_webp/resources/deals/exhibitors_resources/mco-home-desktop-slider-picture-41391824-9603-440e-a18e-65b3cceabb4c.jpg"
-            alt="slide"
-          />
-          <Carousel.Caption></Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            className="d-block w-100"
-            src="https://merchant.razer.com/v3/wp-content/uploads/2015/03/manage-marketplace-banner.jpg"
-            alt="slide"
-          />
+      {showBanner ? (
+        <Carousel>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src="https://http2.mlstatic.com/optimize/o:f_webp/resources/deals/exhibitors_resources/mco-home-desktop-slider-picture-41391824-9603-440e-a18e-65b3cceabb4c.jpg"
+              alt="slide"
+            />
+            <Carousel.Caption></Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src="https://merchant.razer.com/v3/wp-content/uploads/2015/03/manage-marketplace-banner.jpg"
+              alt="slide"
+            />
 
-          <Carousel.Caption></Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            className="d-block w-100"
-            src="https://www.indusnet.co.in/images/mo_developmentTabBanner.png"
-            alt="slide"
-          />
+            <Carousel.Caption></Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src="https://www.indusnet.co.in/images/mo_developmentTabBanner.png"
+              alt="slide"
+            />
 
-          <Carousel.Caption></Carousel.Caption>
-        </Carousel.Item>
-      </Carousel>: null
-      }
-      
+            <Carousel.Caption></Carousel.Caption>
+          </Carousel.Item>
+        </Carousel>
+      ) : null}
+
       {/** Banner end */}
 
       {/** Filter start */}
@@ -695,26 +695,25 @@ function App() {
             </div>
             <div className="content-info">
               <h3>{detail.nameProduct}</h3>
+              <p className="subtitle-cart">{detail.category}</p>
               <p>Price: ${detail.price}</p>
               <p>{detail.description}</p>
-              <div className="content-footer">
-                <Button
-                  variant="outline-dark"
-                  onClick={e => addCart(detail, e)}
-                >
-                  <img
-                    width={20}
-                    height={20}
-                    className="mr-3"
-                    src="../img/shopping-cart.png"
-                    alt="Generic placeholder"
-                  />
-                  Add
-                </Button>
-              </div>
+              <div className="content-footer"></div>
             </div>
           </div>
         </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-dark" onClick={e => addCart(detail, e)}>
+            <img
+              width={20}
+              height={20}
+              className="mr-3"
+              src="../img/shopping-cart.png"
+              alt="Generic placeholder"
+            />
+            Add
+          </Button>
+        </Modal.Footer>
       </Modal>
       {/** end of modal to show product detail */}
 
