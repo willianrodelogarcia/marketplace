@@ -138,7 +138,7 @@ function App() {
     var sum = 0;
     var count = 0;
     //product data is obtained from storage
-    var data = JSON.parse(localStorage.getItem("test"));
+    var data = JSON.parse(localStorage.getItem("product"));
 
     if (data !== null) {
       data.map((data, index) => {
@@ -153,14 +153,14 @@ function App() {
       });
       //the status of the products is saved in the shopping cart in the localStorage
       setShoppingCart({
-        shoppingcarts: JSON.parse(localStorage.getItem("test"))
+        shoppingcarts: JSON.parse(localStorage.getItem("product"))
       });
     }
   };
 
   //function to count the amount of products in the cart
   function countCart() {
-    var data = JSON.parse(localStorage.getItem("test"));
+    var data = JSON.parse(localStorage.getItem("product"));
     var sum = 0;
     var count = 0;
     if (data !== null) {
@@ -182,9 +182,9 @@ function App() {
     //console.log(data);
 
     //we validate that there are products in the localStorage
-    if (localStorage.getItem("test")) {
+    if (localStorage.getItem("product")) {
       //Products are saved
-      products = JSON.parse(localStorage.getItem("test"));
+      products = JSON.parse(localStorage.getItem("product"));
     }
     //a new product is added to the localStorage
     products.push({
@@ -199,7 +199,7 @@ function App() {
     //console.log("productos", products);
 
     //it is saved in localStorage
-    localStorage.setItem("test", JSON.stringify(products));
+    localStorage.setItem("product", JSON.stringify(products));
     countCart();
   }
 
@@ -278,7 +278,7 @@ function App() {
   //function to obtain product data
   const getProducts = async () => {
     //we get the data stored in the localStorage
-    var data = JSON.parse(localStorage.getItem("test"));
+    var data = JSON.parse(localStorage.getItem("product"));
     var sum = 0;
     if (data !== null) {
       var count = 0;
@@ -398,12 +398,12 @@ function App() {
   //function to remove the product from the cart
   function removeProduct(productId) {
     // strore products in local storage
-    let storageProducts = JSON.parse(localStorage.getItem("test"));
+    let storageProducts = JSON.parse(localStorage.getItem("product"));
     //all the different id are searched in storage to only save those that will not be deleted
     let products = storageProducts.filter(product => product.id !== productId);
 
     //all products are stored in the localStorage
-    localStorage.setItem("test", JSON.stringify(products));
+    localStorage.setItem("product", JSON.stringify(products));
 
     //cart products are counted
     countCart();
