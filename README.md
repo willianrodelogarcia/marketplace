@@ -11,8 +11,6 @@ This marketplace uses several technologies such as:
 * [axios] - Promise based HTTP client for the browser and node.js
 * [node.js] - evented I/O for the backend
 
-And of course Dillinger itself is open source with a [public repository][dill]
- on GitHub.
 
 ### Installation
 Install the dependencies and devDependencies and start the server.
