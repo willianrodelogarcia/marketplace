@@ -8,9 +8,6 @@ import {
   Nav,
   Form,
   FormControl,
-  Row,
-  Col,
-  Card,
   Badge,
   Modal,
   Alert,
@@ -19,6 +16,8 @@ import {
 } from "react-bootstrap";
 //react-boostrap styles
 import "bootstrap/dist/css/bootstrap.min.css";
+
+import CardProduct from "./components/CardProducts";
 
 import "./App.css";
 
@@ -78,6 +77,12 @@ function App() {
   //state to control the action of a modal to open and close it
   const [showDetailProduct, setshowDetailProduct] = useState(false);
 
+  //status to save the sum of the products in the cart
+  const [sum, setSum] = useState({
+    sum: 0,
+    count: 0
+  });
+
   //function to close modal and clean form data
   const handleClose = () => {
     setShow(false);
@@ -127,16 +132,6 @@ function App() {
     setshowDetailProduct(false);
   };
 
-  const [save, setSave] = useState({
-    products: []
-  });
-
-  //status to save the sum of the products in the cart
-  const [sum, setSum] = useState({
-    sum: 0,
-    count: 0
-  });
-
   //function to show cart modal
   const handleCartShow = () => {
     setShowCart(true);
@@ -144,7 +139,7 @@ function App() {
     var count = 0;
     //product data is obtained from storage
     var data = JSON.parse(localStorage.getItem("test"));
-    
+
     if (data !== null) {
       data.map((data, index) => {
         sum += data.price;
@@ -243,12 +238,11 @@ function App() {
         const result = await axios.get(
           `https://marketplace-api.herokuapp.com/api/filter/${filter}`
         );
-        
+
         setData({
           products: result.data.products
         });
 
-        
         countProduct(result, filter);
       } catch (err) {
         console.log(err);
@@ -274,10 +268,8 @@ function App() {
           products: result.data.products
         });
 
-        
         countProduct(result, "All Products");
       } catch (err) {
-        
         console.log(err);
       }
     }
@@ -310,10 +302,8 @@ function App() {
         products: result.data.products
       });
 
-      
       countProduct(result, "All Products");
     } catch (err) {
-      
       console.log(err);
     }
   };
@@ -396,7 +386,6 @@ function App() {
           count: index + 1,
           filter: category
         });
-        
       });
     } else {
       setFilter({
@@ -412,7 +401,7 @@ function App() {
     let storageProducts = JSON.parse(localStorage.getItem("test"));
     //all the different id are searched in storage to only save those that will not be deleted
     let products = storageProducts.filter(product => product.id !== productId);
-    
+
     //all products are stored in the localStorage
     localStorage.setItem("test", JSON.stringify(products));
 
@@ -471,7 +460,7 @@ function App() {
           <img
             className="d-block w-100"
             src="https://http2.mlstatic.com/optimize/o:f_webp/resources/deals/exhibitors_resources/mco-home-desktop-slider-picture-41391824-9603-440e-a18e-65b3cceabb4c.jpg"
-            alt="First slide"
+            alt="slide"
           />
           <Carousel.Caption></Carousel.Caption>
         </Carousel.Item>
@@ -479,7 +468,7 @@ function App() {
           <img
             className="d-block w-100"
             src="https://merchant.razer.com/v3/wp-content/uploads/2015/03/manage-marketplace-banner.jpg"
-            alt="Third slide"
+            alt="slide"
           />
 
           <Carousel.Caption></Carousel.Caption>
@@ -488,7 +477,7 @@ function App() {
           <img
             className="d-block w-100"
             src="https://www.indusnet.co.in/images/mo_developmentTabBanner.png"
-            alt="Third slide"
+            alt="slide"
           />
 
           <Carousel.Caption></Carousel.Caption>
@@ -527,48 +516,7 @@ function App() {
 
       {/** Start of the Card with the product */}
       <div className="content">
-        <Row>
-          {data.products.map((data, index) => {
-            return (
-              <Col lg={4} md={4} sm={6} xl={3} xs={12} key={index}>
-                <Card>
-                  <Card.Img
-                    onClick={e => openDetail(data, e)}
-                    className="card-img"
-                    variant="top"
-                    src={data.urlPhotoProduct}
-                  />
-
-                  <Card.Body>
-                    <div onClick={e => openDetail(data, e)}>
-                      <Card.Title>{data.nameProduct}</Card.Title>
-                      <Card.Subtitle className="mb-2 text-muted">
-                        Price:{data.price}
-                      </Card.Subtitle>
-                      <Card.Subtitle className="mb-2 text-muted">
-                        Category:{data.category}
-                      </Card.Subtitle>
-                      <Card.Text></Card.Text>
-                    </div>
-                    <Button
-                      variant="outline-dark"
-                      onClick={e => addCart(data, e)}
-                    >
-                      <img
-                        width={20}
-                        height={20}
-                        className="mr-3"
-                        src="../img/shopping-cart.png"
-                        alt="Generic placeholder"
-                      />
-                      Add to cart
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            );
-          })}
-        </Row>
+        <CardProduct data={data.products} open={openDetail} action={addCart} />
       </div>
       {/** end of the Card with the product */}
 
@@ -763,7 +711,7 @@ function App() {
         </Modal.Body>
       </Modal>
       {/** end of modal to show product detail */}
-      
+
       {/** Start button to add a new product */}
       <div className="xyz">
         <button
