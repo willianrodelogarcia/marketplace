@@ -463,7 +463,7 @@ function App() {
           <Carousel.Item>
             <img
               className="d-block w-100"
-              src="https://http2.mlstatic.com/optimize/o:f_webp/resources/deals/exhibitors_resources/mco-home-desktop-slider-picture-41391824-9603-440e-a18e-65b3cceabb4c.jpg"
+              src="https://www.aceturtle.com/wp-content/uploads/2019/10/Info-sheet-Web-Stores-VS-Marketplaces_Banner.png"
               alt="slide"
             />
             <Carousel.Caption></Carousel.Caption>
